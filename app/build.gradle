@@ -15,6 +15,10 @@ android {
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
 
+    buildFeatures {
+        viewBinding true
+    }
+
     buildTypes {
         release {
             minifyEnabled false
@@ -33,6 +37,7 @@ android {
 dependencies {
 
     implementation Libs.coreKtx
-    //implementation "androidx.appcompat:appcompat:1.4.0"
+    implementation "androidx.appcompat:appcompat:1.4.0"
     implementation Libs.googleAndroidMaterial
+    implementation Libs.constraintLayout
 }
