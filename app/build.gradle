@@ -1,16 +1,17 @@
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-kapt'
+apply plugin: 'dagger.hilt.android.plugin'
 
 android {
-    compileSdk 31
+    compileSdk AppConfig.compileSdk
 
     defaultConfig {
-        applicationId "com.manish.nasaapod"
-        minSdk 23
-        targetSdk 31
-        versionCode 1
-        versionName "1.0"
+        applicationId AppConfig.applicationID
+        minSdk AppConfig.minSdk
+        targetSdk AppConfig.targetSdk
+        versionCode AppConfig.versionCode
+        versionName AppConfig.versionName
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -40,4 +41,6 @@ dependencies {
     implementation "androidx.appcompat:appcompat:1.4.0"
     implementation Libs.googleAndroidMaterial
     implementation Libs.constraintLayout
+    implementation Libs.hiltAndroid
+    kapt Libs.hiltCompiler
 }
