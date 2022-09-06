@@ -1,23 +1,40 @@
 package com.manish.nasaapod.ui.activity
 
+import android.content.pm.PackageManager
 import android.os.Bundle
+import android.text.format.DateFormat
 import android.text.format.DateUtils
+import android.util.Log
+import android.view.View
 import android.widget.Toast
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.lifecycleScope
+import com.bumptech.glide.Glide
 import com.google.android.material.datepicker.CalendarConstraints
 import com.google.android.material.datepicker.MaterialDatePicker
+import com.manish.common_network.APODResponse
 import com.manish.nasaapod.databinding.ActivityMainBinding
+import com.manish.nasaapod.intent.MainIntent
+import com.manish.nasaapod.state.MainState
+import com.manish.nasaapod.viewmodel.MainViewModel
+import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
+import timber.log.Timber
 import java.util.*
 
+@AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding : ActivityMainBinding
+    private val mainViewModel : MainViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
         initViews()
+        observeViewModel()
     }
 
     private fun initViews() {
@@ -36,9 +53,12 @@ class MainActivity : AppCompatActivity() {
                 .setTitleText("Select date")
                 .build()
 
-        datePicker.addOnPositiveButtonClickListener {
+        datePicker.addOnPositiveButtonClickListener { millis ->
             // Respond to positive button click.
-            binding.tvDateToday.text = DateUtils.formatDateTime(this, it, DateUtils.FORMAT_ABBREV_ALL)
+            binding.tvDateToday.text = DateUtils.formatDateTime(this, millis, DateUtils.FORMAT_ABBREV_ALL)
+            val selectedDateTwo = convertMillisToDate("yyyy-MM-dd", millis)
+            Log.v("MainActivity", "selectedDate is  calling api function")
+            callAPODApi(selectedDateTwo)
         }
         datePicker.addOnNegativeButtonClickListener {
             // Respond to negative button click.
@@ -70,6 +90,64 @@ class MainActivity : AppCompatActivity() {
         return CalendarConstraints.Builder()
             .setStart(janThisYear)
             .setEnd(decThisYear)
+    }
+
+    private fun callAPODApi(date: String){
+        val queryMap = HashMap<String, String>()
+        queryMap["api_key"] = getAPIKey()
+        queryMap["date"] = date
+        lifecycleScope.launch {
+            mainViewModel.mainIntent.send(MainIntent.FetchNasaAPOD(queryMap))
+        }
+        Log.v("MainActivity", "apiKey is ${getAPIKey()} and date in $date api called")
+    }
+
+    private fun getAPIKey() : String {
+        val applicationInfo = packageManager.getApplicationInfo(packageName, PackageManager.GET_META_DATA)
+        return applicationInfo.metaData["apiKey"].toString()
+    }
+
+    private fun observeViewModel() {
+        lifecycleScope.launch {
+            mainViewModel.state.collect {
+                when (it) {
+                    is MainState.Loading -> {
+
+                    }
+                    is MainState.FetchNasaAPODSuccess -> {
+                        updateUI(it.result)
+                    }
+                    is MainState.FetchNasaAPODApiError -> {
+                        updateUIWhenAPIFails()
+                    }
+                    is MainState.FetchNasaAPODNetworkError -> {
+                        Toast.makeText(this@MainActivity, "Network issue", Toast.LENGTH_LONG).show()
+                    }
+                    is MainState.FetchNasaAPODUnknownError -> {
+                        Toast.makeText(this@MainActivity, "Unknown issue", Toast.LENGTH_LONG).show()
+                    }
+                }
+            }
+        }
+    }
+
+    private fun updateUI(result: APODResponse) {
+        binding.tvDateToday.text = result.date
+        Glide.with(this).load(result.url).into(binding.ivAPOD)
+        binding.tvTitle.text = result.title
+        binding.tvExplanation.text = result.explanation
+        binding.tvExplanation.visibility = View.VISIBLE
+        binding.ivAPOD.visibility = View.VISIBLE
+    }
+
+    private fun updateUIWhenAPIFails(){
+        binding.tvExplanation.visibility = View.GONE
+        binding.ivAPOD.visibility = View.GONE
+        binding.tvTitle.text = "Something went wrong"
+    }
+
+    private fun convertMillisToDate(dateFormat: String, dateInMilliseconds: Long): String {
+        return DateFormat.format(dateFormat, dateInMilliseconds).toString()
     }
 
 

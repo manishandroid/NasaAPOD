@@ -1,7 +1,9 @@
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-kapt'
+apply plugin: 'kotlin-parcelize'
 apply plugin: 'dagger.hilt.android.plugin'
+apply plugin: 'com.google.android.libraries.mapsplatform.secrets-gradle-plugin'
 
 android {
     compileSdk AppConfig.compileSdk
@@ -38,7 +40,6 @@ android {
 dependencies {
 
     implementation Libs.coreKtx
-    implementation "androidx.appcompat:appcompat:1.4.0"
     implementation Libs.googleAndroidMaterial
     implementation Libs.constraintLayout
     implementation Libs.hiltAndroid
@@ -50,7 +51,16 @@ dependencies {
     implementation Libs.moshi
     implementation Libs.moshiKotlin
     implementation Libs.moshiConverterRetrofit
-    implementation Libs.moshiKotlinCodegen
+    kapt Libs.moshiKotlinCodegen
+    implementation Libs.kotlinCoroutineCore
+    implementation Libs.kotlinCoroutineAndroid
+    implementation Libs.lifecycleRuntimeKtx
+    implementation Libs.lifecycleViewModelKtx
+    implementation Libs.activityKtx
+    implementation Libs.glide
+    implementation Libs.timber
+}
 
-    implementation "com.jakewharton.timber:timber:4.7.1"
+repositories {
+    mavenCentral()
 }

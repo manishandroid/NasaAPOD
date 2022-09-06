@@ -11,4 +11,12 @@ object Libs {
     const val moshiKotlin = "com.squareup.moshi:moshi-kotlin:${Version.moshi}"
     const val moshiKotlinCodegen = "com.squareup.moshi:moshi-kotlin-codegen:${Version.moshi}"
     const val moshiConverterRetrofit = "com.squareup.retrofit2:converter-moshi:${Version.moshiConverterRetrofit}"
+    const val kotlinCoroutineAndroid = "org.jetbrains.kotlinx:kotlinx-coroutines-android:${Version.kotlinCoroutineAndroid}"
+    const val kotlinCoroutineCore = "org.jetbrains.kotlinx:kotlinx-coroutines-core:${Version.kotlinCoroutineAndroid}"
+    const val lifecycleExtensions = "android.arch.lifecycle:extensions:${Version.lifecycleExtensions}"
+    const val lifecycleViewModelKtx = "androidx.lifecycle:lifecycle-viewmodel-ktx:${Version.lifecycleViewModelKtx}"
+    const val lifecycleRuntimeKtx = "androidx.lifecycle:lifecycle-runtime-ktx:${Version.lifecycleRuntimeKtx}"
+    const val activityKtx = "androidx.activity:activity-ktx:${Version.activityKtx}"
+    const val glide = "com.github.bumptech.glide:glide:${Version.glide}"
+    const val timber = "com.jakewharton.timber:timber:${Version.timber}"
 }

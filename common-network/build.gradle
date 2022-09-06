@@ -26,7 +26,6 @@ android {
 }
 
 dependencies {
-
     implementation Libs.hiltAndroid
     kapt Libs.hiltCompiler
     implementation Libs.retrofit
@@ -34,6 +33,6 @@ dependencies {
     implementation Libs.loggingInterceptor
     implementation Libs.moshi
     implementation Libs.moshiKotlin
-    implementation Libs.moshiKotlinCodegen
+    kapt Libs.moshiKotlinCodegen
     implementation Libs.moshiConverterRetrofit
 }

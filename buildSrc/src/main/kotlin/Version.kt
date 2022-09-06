@@ -10,4 +10,11 @@ object Version {
     const val moshi = "1.13.0"
     const val moshiConverterRetrofit = "2.9.0"
     const val secretGradlePlugin = "2.0.1"
+    const val kotlinCoroutineAndroid = "1.6.4"
+    const val lifecycleExtensions = "1.1.1"
+    const val lifecycleViewModelKtx = "2.6.0-alpha01"
+    const val lifecycleRuntimeKtx = "2.3.1"
+    const val activityKtx = "1.4.0"
+    const val glide = "4.13.2"
+    const val timber = "4.7.1"
 }

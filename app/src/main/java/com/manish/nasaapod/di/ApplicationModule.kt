@@ -3,7 +3,7 @@ package com.manish.nasaapod.di
 import android.app.Application
 import android.content.Context
 import android.content.pm.PackageManager
-import com.manish.common_network.api.EndPoint
+import com.manish.common_network.api.*
 import com.manish.common_network.utils.NetworkResponseAdapterFactory
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
@@ -38,7 +38,7 @@ class ApplicationModule {
 
     @Provides
     @Singleton
-    fun provideOkHttpClient(application: Application) : OkHttpClient {
+    fun provideOkHttpClient() : OkHttpClient {
         val okhttp = OkHttpClient.Builder()
             .connectTimeout(CONNECT_TIMEOUT, TimeUnit.SECONDS)
             .readTimeout(READ_WRITE_TIMEOUT, TimeUnit.SECONDS)
@@ -51,7 +51,7 @@ class ApplicationModule {
     @Provides
     @Singleton
     fun provideRetrofit(okHttpClient: OkHttpClient) : Retrofit = Retrofit.Builder()
-        .addConverterFactory(MoshiConverterFactory.create(Moshi.Builder().addLast(
+        .addConverterFactory(MoshiConverterFactory.create(Moshi.Builder().add(
             KotlinJsonAdapterFactory()
         ).build()))
         .addCallAdapterFactory(NetworkResponseAdapterFactory())
@@ -60,4 +60,15 @@ class ApplicationModule {
         .build()
 
 
+    @Provides
+    @Singleton
+    fun provideApiService(retrofit: Retrofit): APIService = retrofit.create(APIService::class.java)
+
+    @Provides
+    @Singleton
+    fun provideApiHelper(apiHelperImpl: ApiHelperImpl): ApiHelper = apiHelperImpl
+
+    @Provides
+    @Singleton
+    fun provideApiRepository(apiHelperImpl: ApiHelperImpl) = ApiRepository(apiHelperImpl)
 }

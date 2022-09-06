@@ -21,6 +21,10 @@
             </intent-filter>
         </activity>
 
+        <meta-data
+            android:name="apiKey"
+            android:value="${apiKey}"/>
+
     </application>
 
 </manifest>
