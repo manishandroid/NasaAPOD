@@ -2,7 +2,6 @@ package com.manish.nasaapod.di
 
 import android.app.Application
 import android.content.Context
-import android.content.pm.PackageManager
 import com.manish.common_network.api.*
 import com.manish.common_network.utils.NetworkResponseAdapterFactory
 import com.squareup.moshi.Moshi
@@ -17,7 +16,6 @@ import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
 import timber.log.Timber
 import java.util.concurrent.TimeUnit
-import javax.inject.Named
 import javax.inject.Singleton
 
 @Module

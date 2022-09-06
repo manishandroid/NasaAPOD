@@ -4,7 +4,6 @@ import android.content.pm.PackageManager
 import android.os.Bundle
 import android.text.format.DateFormat
 import android.text.format.DateUtils
-import android.util.Log
 import android.view.View
 import android.widget.Toast
 import androidx.activity.viewModels
@@ -63,7 +62,6 @@ class MainActivity : AppCompatActivity() {
             // Respond to positive button click.
             binding.tvDateToday.text = DateUtils.formatDateTime(this, millis, DateUtils.FORMAT_ABBREV_ALL)
             val selectedDateTwo = convertMillisToDate("yyyy-MM-dd", millis)
-            Log.v("MainActivity", "selectedDate is  calling api function")
             callAPODApi(selectedDateTwo)
         }
         datePicker.addOnNegativeButtonClickListener {
@@ -105,7 +103,6 @@ class MainActivity : AppCompatActivity() {
         lifecycleScope.launch {
             mainViewModel.mainIntent.send(MainIntent.FetchNasaAPOD(queryMap))
         }
-        Log.v("MainActivity", "apiKey is ${getAPIKey()} and date in $date api called")
     }
 
     private fun getAPIKey() : String {
@@ -136,6 +133,7 @@ class MainActivity : AppCompatActivity() {
                         hideProgress()
                         Toast.makeText(this@MainActivity, "Unknown issue", Toast.LENGTH_LONG).show()
                     }
+                    else -> {}
                 }
             }
         }
@@ -163,7 +161,7 @@ class MainActivity : AppCompatActivity() {
     private fun updateUIWhenAPIFails(){
         binding.tvExplanation.visibility = View.GONE
         binding.ivAPOD.visibility = View.GONE
-        binding.tvTitle.text = "Something went wrong"
+        binding.tvTitle.text = getString(R.string.something_went_wrong)
     }
 
     private fun convertMillisToDate(dateFormat: String, dateInMilliseconds: Long): String {

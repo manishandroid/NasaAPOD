@@ -5,30 +5,18 @@ import android.content.Context
 import com.manish.nasaapod.R
 import android.graphics.drawable.AnimationDrawable
 import android.content.DialogInterface
-import com.manish.nasaapod.ui.dialog.CommonProgress
 import android.view.WindowManager
 import android.view.Gravity
 import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
 
-class CommonProgress : Dialog {
-    constructor(context: Context?) : super(context!!) {}
-    constructor(context: Context?, theme: Int) : super(context!!, theme) {}
+class CommonProgress(context: Context?, theme: Int) : Dialog(context!!, theme) {
 
     override fun onWindowFocusChanged(hasFocus: Boolean) {
         val imageView = findViewById<View>(R.id.spinnerImageView) as ImageView
         val spinner = imageView.background as AnimationDrawable
         spinner.start()
-    }
-
-    fun setMessage(message: CharSequence?) {
-        if (message != null && message.length > 0) {
-            findViewById<View>(R.id.message).visibility = View.VISIBLE
-            val txt = findViewById<View>(R.id.message) as TextView
-            txt.text = message
-            txt.invalidate()
-        }
     }
 
     companion object {

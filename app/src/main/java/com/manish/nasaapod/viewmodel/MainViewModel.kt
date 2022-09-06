@@ -1,6 +1,5 @@
 package com.manish.nasaapod.viewmodel
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.manish.common_network.api.ApiRepository
@@ -12,10 +11,8 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.consumeAsFlow
 import kotlinx.coroutines.launch
-import retrofit2.http.QueryMap
 import javax.inject.Inject
 
 @HiltViewModel
