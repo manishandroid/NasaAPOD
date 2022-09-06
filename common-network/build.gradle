@@ -1,0 +1,39 @@
+apply plugin: 'com.android.library'
+apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-kapt'
+apply plugin: 'dagger.hilt.android.plugin'
+
+android {
+    compileSdk = AppConfig.compileSdk
+
+    defaultConfig {
+
+        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+        }
+    }
+    compileOptions {
+        sourceCompatibility = JavaVersion.VERSION_1_8
+        targetCompatibility = JavaVersion.VERSION_1_8
+    }
+    kotlinOptions {
+        jvmTarget = "1.8"
+    }
+}
+
+dependencies {
+
+    implementation Libs.hiltAndroid
+    kapt Libs.hiltCompiler
+    implementation Libs.retrofit
+    implementation Libs.okhttp
+    implementation Libs.loggingInterceptor
+    implementation Libs.moshi
+    implementation Libs.moshiKotlin
+    implementation Libs.moshiKotlinCodegen
+    implementation Libs.moshiConverterRetrofit
+}

@@ -1,4 +1,5 @@
 rootProject.name = "NasaAPOD"
 include(
-    ":app"
+    ":app",
+    ":common-network"
 )
