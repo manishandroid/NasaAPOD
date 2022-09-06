@@ -42,5 +42,15 @@ dependencies {
     implementation Libs.googleAndroidMaterial
     implementation Libs.constraintLayout
     implementation Libs.hiltAndroid
+    implementation project(path: ':common-network')
     kapt Libs.hiltCompiler
+    implementation Libs.okhttp
+    implementation Libs.loggingInterceptor
+    implementation Libs.retrofit
+    implementation Libs.moshi
+    implementation Libs.moshiKotlin
+    implementation Libs.moshiConverterRetrofit
+    implementation Libs.moshiKotlinCodegen
+
+    implementation "com.jakewharton.timber:timber:4.7.1"
 }
