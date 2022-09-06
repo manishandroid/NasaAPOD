@@ -11,23 +11,29 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import com.bumptech.glide.Glide
+import com.bumptech.glide.Priority
+import com.bumptech.glide.load.engine.DiskCacheStrategy
+import com.bumptech.glide.request.RequestOptions
 import com.google.android.material.datepicker.CalendarConstraints
 import com.google.android.material.datepicker.MaterialDatePicker
 import com.manish.common_network.APODResponse
+import com.manish.nasaapod.R
 import com.manish.nasaapod.databinding.ActivityMainBinding
 import com.manish.nasaapod.intent.MainIntent
 import com.manish.nasaapod.state.MainState
+import com.manish.nasaapod.ui.dialog.CommonProgress
 import com.manish.nasaapod.viewmodel.MainViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
-import timber.log.Timber
 import java.util.*
+
 
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding : ActivityMainBinding
     private val mainViewModel : MainViewModel by viewModels()
+    private lateinit var mCommonProgress: CommonProgress
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -112,18 +118,22 @@ class MainActivity : AppCompatActivity() {
             mainViewModel.state.collect {
                 when (it) {
                     is MainState.Loading -> {
-
+                        showProgress("Loading...")
                     }
                     is MainState.FetchNasaAPODSuccess -> {
                         updateUI(it.result)
+                        hideProgress()
                     }
                     is MainState.FetchNasaAPODApiError -> {
                         updateUIWhenAPIFails()
+                        hideProgress()
                     }
                     is MainState.FetchNasaAPODNetworkError -> {
+                        hideProgress()
                         Toast.makeText(this@MainActivity, "Network issue", Toast.LENGTH_LONG).show()
                     }
                     is MainState.FetchNasaAPODUnknownError -> {
+                        hideProgress()
                         Toast.makeText(this@MainActivity, "Unknown issue", Toast.LENGTH_LONG).show()
                     }
                 }
@@ -133,7 +143,17 @@ class MainActivity : AppCompatActivity() {
 
     private fun updateUI(result: APODResponse) {
         binding.tvDateToday.text = result.date
-        Glide.with(this).load(result.url).into(binding.ivAPOD)
+
+        val options: RequestOptions = RequestOptions()
+            .centerCrop()
+            .placeholder(R.drawable.image_loader_progress_animation)
+            .diskCacheStrategy(DiskCacheStrategy.ALL)
+            .priority(Priority.HIGH)
+            .dontAnimate()
+            .dontTransform()
+
+        Glide.with(this).load(result.url).apply(options).into(binding.ivAPOD)
+
         binding.tvTitle.text = result.title
         binding.tvExplanation.text = result.explanation
         binding.tvExplanation.visibility = View.VISIBLE
@@ -148,6 +168,15 @@ class MainActivity : AppCompatActivity() {
 
     private fun convertMillisToDate(dateFormat: String, dateInMilliseconds: Long): String {
         return DateFormat.format(dateFormat, dateInMilliseconds).toString()
+    }
+
+    private fun showProgress(message: String) {
+        if(this::mCommonProgress.isInitialized && mCommonProgress.isShowing) return
+        mCommonProgress = CommonProgress.show(this, message, false, null)
+    }
+
+    private fun hideProgress() {
+        if(this::mCommonProgress.isInitialized && mCommonProgress.isShowing) mCommonProgress.dismiss()
     }
 
 
